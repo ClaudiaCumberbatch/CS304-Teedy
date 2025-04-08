@@ -116,6 +116,40 @@
         <artifactId>jetty-maven-plugin</artifactId>
         <version>${org.eclipse.jetty.jetty-maven-plugin.version}</version>
       </plugin>
+
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.12.1</version>  <!-- 根据需要选择合适的版本 -->
+      </plugin>
+
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>3.4.1</version> <!-- 或更低版本 -->
+      </plugin>
+
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>3.21.0</version>
+          <executions>
+              <execution>
+                <phase>verify</phase>
+                  <goals>
+                      <goal>check</goal>
+                      <goal>pmd</goal>
+                  </goals>
+              </execution>
+          </executions>
+          <configuration>
+              <rulesets>
+                  <ruleset>customize-rules.xml</ruleset>
+              </rulesets>
+              <failOnViolation>false</failOnViolation>
+              <printFailingErrors>true</printFailingErrors>
+          </configuration>
+        </plugin>
     </plugins>
   </build>
 
@@ -490,5 +524,35 @@
 
     </dependencies>
   </dependencyManagement>
+
+   <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>3.4.1</version>
+      </plugin>
+
+      <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>3.21.0</version>
+            <configuration>
+                <rulesets>
+                    <ruleset>customize-rules.xml</ruleset>
+                </rulesets>
+                
+                
+            </configuration>
+        </plugin>
+    </plugins>
+  </reporting>
+
+  <distributionManagement>
+    <site>
+      <id>dummy-site</id>
+      <url>file://${project.build.directory}/staging</url>
+    </site>
+  </distributionManagement>
 
 </project>
