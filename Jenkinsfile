@@ -104,7 +104,6 @@ pipeline {
             sh """
               docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
               docker push ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
-              docker push ${env.DOCKER_IMAGE}:latest
             """
           }
         }
