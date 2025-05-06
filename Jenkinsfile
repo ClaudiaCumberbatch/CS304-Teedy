@@ -8,7 +8,7 @@ pipeline {
     // Use full path to Docker socket on macOS
     DOCKER_HOST = "unix://${env.HOME}/.docker/run/docker.sock"
     // Disable buildkit to avoid potential issues
-    DOCKER_BUILDKIT = "0"
+    DOCKER_BUILDKIT = "1"
 
     // Jenkins credentials configuration
     DOCKER_HUB_CREDENTIALS = credentials('dockerhub_credentials') // Docker Hub credentials ID store in Jenkins
@@ -58,8 +58,7 @@ pipeline {
         script {
           // Explicitly use the Docker socket path
           withEnv(["DOCKER_HOST=unix://${env.HOME}/.docker/run/docker.sock"]) {
-            // Add --progress=plain for better debugging
-            sh "docker build --progress=plain -t ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ."
+            sh "docker build -t ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ."
           }
         }
       }
