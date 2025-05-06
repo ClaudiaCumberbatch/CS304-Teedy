@@ -1,11 +1,15 @@
 pipeline {
   agent any
   environment {
+    // Add Docker to PATH (macOS default location)
+    PATH = "/usr/local/bin:${env.PATH}"
+
     // define environment variable
     // Use full path to Docker socket on macOS
     DOCKER_HOST = "unix://${env.HOME}/.docker/run/docker.sock"
     // Disable buildkit to avoid potential issues
     DOCKER_BUILDKIT = "0"
+
     // Jenkins credentials configuration
     DOCKER_HUB_CREDENTIALS = credentials('dockerhub_credentials') // Docker Hub credentials ID store in Jenkins
     // Docker Hub Repository's name
@@ -17,6 +21,17 @@ pipeline {
       // dockerTool 'Docker 27'
   }
   stages {
+    stage('Verify Docker') {
+      steps {
+        script {
+          // Print PATH for debugging
+          sh 'echo $PATH'
+          // Verify Docker access
+          sh 'which docker'
+          sh 'docker --version'
+        }
+      }
+    }
     stage('Build') {
       steps {
         checkout scmGit(
