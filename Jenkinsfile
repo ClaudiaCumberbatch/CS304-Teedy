@@ -8,6 +8,9 @@ pipeline {
     DOCKER_IMAGE = 'claudiacumberbatch/teedy-app' // your Docker Hub user name and Repository's name
     DOCKER_TAG = "${env.BUILD_NUMBER}" // use build number as tag
   }
+  tools {
+      maven 'Maven 3' 
+  }
   stages {
     stage('Build') {
       steps {
