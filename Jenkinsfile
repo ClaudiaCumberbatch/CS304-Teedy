@@ -79,15 +79,33 @@ pipeline {
       }
     }
     // Uploading Docker images into Docker Hub
+    // stage('Upload image') {
+    //   steps {
+    //     script {
+    //       // sign in Docker Hub
+    //       docker.withRegistry('https://registry.hub.docker.com', 'DOCKER_HUB_CREDENTIALS') {
+    //       // push image
+    //       docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push()
+    //       // ：optional: label latest
+    //       docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push('latest')
+    //       }
+    //     }
+    //   }
+    // }
     stage('Upload image') {
+      // 将 withCredentials 直接应用于上传阶段
       steps {
-        script {
-          // sign in Docker Hub
-          docker.withRegistry('https://registry.hub.docker.com', 'DOCKER_HUB_CREDENTIALS') {
-          // push image
-          docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push()
-          // ：optional: label latest
-          docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push('latest')
+        withCredentials([usernamePassword(
+            credentialsId: 'dockerhub_credentials',
+            usernameVariable: 'DOCKER_HUB_USER',
+            passwordVariable: 'DOCKER_HUB_PASSWORD'
+        )]) {
+          script {
+            sh """
+              docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
+              docker push ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
+              docker push ${env.DOCKER_IMAGE}:latest
+            """
           }
         }
       }
