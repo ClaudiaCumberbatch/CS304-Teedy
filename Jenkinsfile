@@ -21,7 +21,7 @@ pipeline {
         userRemoteConfigs: [[url: 'https://github.com/ClaudiaCumberbatch/CS304-Teedy.git']]
         // your github Repository
         )
-        sh 'mvn -B -DskipTests clean package'
+        bat 'mvn -B -DskipTests clean package'
       }
     }
     // Building Docker images
@@ -53,14 +53,14 @@ pipeline {
       steps {
         script {
         // stop then remove containers if exists
-        sh 'docker stop teedy-container-8081 || true'
-        sh 'docker rm teedy-container-8081 || true'
+        bat 'docker stop teedy-container-8081 || true'
+        bat 'docker rm teedy-container-8081 || true'
         // run Container
         docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").run(
         '--name teedy-container-8081 -d -p 8081:8080'
         )
         // Optional: list all teedy-containers
-        sh 'docker ps --filter "name=teedy-container"'
+        bat 'docker ps --filter "name=teedy-container"'
         }
       }
     }
