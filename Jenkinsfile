@@ -10,6 +10,7 @@ pipeline {
   }
   tools {
       maven 'Maven 3' 
+      docker 'Docker 27'
   }
   stages {
     stage('Build') {
