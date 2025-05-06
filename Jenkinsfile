@@ -63,13 +63,27 @@ pipeline {
         }
       }
     }
+    stage('Verify Credentials') {
+      steps {
+        script {
+          // 这会输出凭据信息(注意安全，仅用于调试)
+          echo "DOCKER_HUB_CREDENTIALS_USR: ${env.DOCKER_HUB_CREDENTIALS_USR}"
+          echo "DOCKER_HUB_CREDENTIALS_PSW: ${env.DOCKER_HUB_CREDENTIALS_PSW?.replaceAll('.', 'x')}"
+              
+          // 测试登录(仅用于调试)
+          sh '''
+              echo "Attempting to login to Docker Hub..."
+              docker login -u $DOCKER_HUB_CREDENTIALS_USR -p $DOCKER_HUB_CREDENTIALS_PSW
+          '''
+        }
+      }
+    }
     // Uploading Docker images into Docker Hub
     stage('Upload image') {
       steps {
         script {
           // sign in Docker Hub
-          docker.withRegistry('https://registry.hub.docker.com',
-          'DOCKER_HUB_CREDENTIALS') {
+          docker.withRegistry('https://registry.hub.docker.com', 'DOCKER_HUB_CREDENTIALS') {
           // push image
           docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push()
           // ：optional: label latest
