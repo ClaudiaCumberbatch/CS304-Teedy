@@ -5,6 +5,7 @@ pipeline {
         DEPLOYMENT_NAME = "teedy-deployment"
         CONTAINER_NAME = "teedy-app"
         IMAGE_NAME = "claudiacumberbatch/teedy-app:24" // or your preferred version
+        PATH = "/opt/homebrew/bin:/usr/local/bin:${PATH}"
     }
 
     stages {
