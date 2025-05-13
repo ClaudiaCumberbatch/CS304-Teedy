@@ -26,14 +26,14 @@ pipeline {
             steps {
                 script {
                     // Check if deployment exists
-                    def deploymentExists = !sh(returnStatus: true, script: "kubectl get deployment ${DEPLOYMENT_NAME}")
+                    def deploymentExists = !sh(returnStatus: true, script: "/opt/homebrew/bin/kubectl get deployment ${DEPLOYMENT_NAME}")
                     
                     if (deploymentExists) {
                         echo "Updating existing deployment..."
-                        sh "kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${IMAGE_NAME}"
+                        sh "/opt/homebrew/bin/kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${IMAGE_NAME}"
                     } else {
                         echo "Creating new deployment..."
-                        sh "kubectl create deployment ${DEPLOYMENT_NAME} --image=${IMAGE_NAME}"
+                        sh "/opt/homebrew/bin/kubectl create deployment ${DEPLOYMENT_NAME} --image=${IMAGE_NAME}"
                     }
                 }
             }
@@ -43,11 +43,11 @@ pipeline {
             steps {
                 script {
                     // Check if service exists
-                    def serviceExists = !sh(returnStatus: true, script: "kubectl get service ${DEPLOYMENT_NAME}")
+                    def serviceExists = !sh(returnStatus: true, script: "/opt/homebrew/bin/kubectl get service ${DEPLOYMENT_NAME}")
                     
                     if (!serviceExists) {
                         echo "Exposing deployment as service..."
-                        sh "kubectl expose deployment ${DEPLOYMENT_NAME} --type=LoadBalancer --port=8080"
+                        sh "/opt/homebrew/bin/kubectl expose deployment ${DEPLOYMENT_NAME} --type=LoadBalancer --port=8080"
                     } else {
                         echo "Service already exists."
                     }
@@ -57,9 +57,9 @@ pipeline {
 
         stage('Verify Deployment') {
             steps {
-                sh "kubectl rollout status deployment/${DEPLOYMENT_NAME}"
-                sh "kubectl get pods"
-                sh "kubectl get services"
+                sh "/opt/homebrew/bin/kubectl rollout status deployment/${DEPLOYMENT_NAME}"
+                sh "/opt/homebrew/bin/kubectl get pods"
+                sh "/opt/homebrew/bin/kubectl get services"
             }
         }
 
@@ -81,8 +81,8 @@ pipeline {
     post {
         always {
             echo "Pipeline completed. Check Kubernetes resources:"
-            sh "kubectl get pods"
-            sh "kubectl get services"
+            sh "/opt/homebrew/bin/kubectl get pods"
+            sh "/opt/homebrew/bin/kubectl get services"
         }
     }
 }
